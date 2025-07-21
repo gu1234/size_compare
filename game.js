@@ -86,20 +86,40 @@ function showPair(pair) {
   const positions = [-distance / 2, distance / 2];
   pair.forEach((obj, i) => {
     const geometry = new THREE.SphereGeometry(displayRadius, 32, 32);
-    // Load texture if available
+    // Load texture if available with improved error handling
     let material;
     if (obj.texture) {
       const texture = textureLoader.load(
         'textures/' + obj.texture,
-        undefined,
-        undefined,
+        function (loadedTexture) {
+          // Success callback: texture loaded successfully
+          console.log('Texture loaded successfully:', obj.texture);
+        },
+        function (progress) {
+          // Progress callback: optional loading progress
+          if (progress.total > 0) {
+            const percent = Math.round((progress.loaded / progress.total) * 100);
+            console.log(`Loading texture ${obj.texture}: ${percent}%`);
+          }
+        },
         function (err) {
-          console.warn('Texture failed to load:', obj.texture);
+          // Error callback: fallback to color when texture fails
+          console.warn('Texture failed to load, using fallback color:', obj.texture, err);
+          // Update material to use color instead of texture
+          if (material && material.map) {
+            material.map = null;
+            material.color.setHex(obj.color || 0xffffff);
+            material.needsUpdate = true;
+          }
         }
       );
-      material = new THREE.MeshPhongMaterial({ map: texture, color: 0xffffff }); // no tint
+      // Set a placeholder color while texture loads
+      material = new THREE.MeshPhongMaterial({ 
+        map: texture, 
+        color: 0xffffff // no tint when texture is available
+      });
     } else {
-      material = new THREE.MeshPhongMaterial({ color: obj.color });
+      material = new THREE.MeshPhongMaterial({ color: obj.color || 0xffffff });
     }
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = positions[i];
@@ -109,7 +129,16 @@ function showPair(pair) {
 
     // Add rings for Saturn
     if (obj.name === 'Saturn') {
-      const ringTexture = textureLoader.load('textures/saturn_ring.png');
+      const ringTexture = textureLoader.load(
+        'textures/saturn_ring.png',
+        function (loadedTexture) {
+          console.log('Saturn ring texture loaded successfully');
+        },
+        undefined,
+        function (err) {
+          console.warn('Saturn ring texture failed to load:', err);
+        }
+      );
       const innerRadius = displayRadius * 1.1;
       const outerRadius = displayRadius * 1.8;
       const segments = 64;
