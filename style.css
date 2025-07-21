@@ -2,9 +2,11 @@ html, body {
   width: 100vw;
   height: 100vh;
   min-height: 100vh;
+  max-height: 100vh;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  overflow-y: hidden;
 }
 
 body {
@@ -24,6 +26,12 @@ body {
   position: relative;
 }
 
+body, #game-container, #game-container * {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
 h1 {
   color: #fff;
   font-size: 3rem;
@@ -37,6 +45,7 @@ h1 {
   width: 100vw;
   height: 60vh;
   overflow: visible;
+  touch-action: none;
 }
 
 #game-container canvas {

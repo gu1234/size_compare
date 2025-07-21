@@ -220,6 +220,31 @@ function onClick(event) {
 
 renderer.domElement.addEventListener('click', onClick);
 
+// Prevent context menu on long-press
+renderer.domElement.addEventListener('contextmenu', function(e) {
+  e.preventDefault();
+});
+
+// Use pointer events for unified handling
+renderer.domElement.addEventListener('pointerdown', function(event) {
+  event.preventDefault();
+});
+
+renderer.domElement.addEventListener('pointerup', function(event) {
+  event.preventDefault();
+  // Only handle left mouse button or touch/pen
+  if (event.pointerType === 'mouse' && event.button !== 0) return;
+  // Synthesize a click event for compatibility with existing logic
+  const simulatedEvent = new MouseEvent('click', {
+    clientX: event.clientX,
+    clientY: event.clientY,
+    bubbles: true,
+    cancelable: true,
+    view: window
+  });
+  renderer.domElement.dispatchEvent(simulatedEvent);
+});
+
 // Keyboard controls: 1 = left, 2 = right
 window.addEventListener('keydown', function(event) {
   if (!canClick) return;
