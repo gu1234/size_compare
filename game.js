@@ -144,18 +144,16 @@ function showPair(pair) {
     // Project a point just below the mesh to 2D screen coordinates
     const mesh = meshes.find(m => m.userData && m.userData.obj === obj);
     if (mesh) {
-      // Always use the sphere's radius for label placement, even for Saturn
       const radius = mesh.geometry.parameters.radius || 4;
-      const offset = 2.2; // Increased offset for orthographic camera
+      const offset = 1.25; // Closer to the object
       const bottom = mesh.localToWorld(new THREE.Vector3(0, -radius * offset, 0));
       const projected = bottom.clone().project(camera);
-      const containerRect = container.getBoundingClientRect();
-      const x = (projected.x * 0.5 + 0.5) * containerRect.width - 50;
-      const y = (1 - (projected.y * 0.5 + 0.5)) * containerRect.height;
+      const canvasRect = renderer.domElement.getBoundingClientRect();
+      const x = (projected.x * 0.5 + 0.5) * canvasRect.width - 50;
+      const y = (1 - (projected.y * 0.5 + 0.5)) * canvasRect.height;
       label.style.left = `${x}px`;
       label.style.top = `${y}px`;
     }
-    label.style.width = '100px';
     label.style.textAlign = 'center';
     label.style.fontSize = '2rem';
     label.style.color = '#fff';

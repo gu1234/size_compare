@@ -8,7 +8,8 @@ html, body {
 }
 
 body {
-  background: linear-gradient(135deg, #4e54c8 0%, #8f94fb 100%);
+  background: linear-gradient(rgba(10,10,30,0.3), rgba(10,10,30,0.3)), url('images/background.jpg') no-repeat center center fixed, linear-gradient(135deg, #0a0a23 0%, #1a1a40 100%);
+  background-size: cover;
   min-height: 100vh;
   min-width: 100vw;
   width: 100vw;
@@ -17,9 +18,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  /* font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif; */
+  font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
   box-sizing: border-box;
   overflow-x: hidden;
+  position: relative;
 }
 
 h1 {
@@ -31,14 +33,35 @@ h1 {
 }
 
 #game-container {
+  position: relative;
   width: 100vw;
   height: 60vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
+  overflow: visible;
+}
+
+#game-container canvas {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 1;
+  display: block;
+  pointer-events: auto;
+}
+
+.obj-label {
+  position: absolute;
+  z-index: 10;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-family: inherit;
+  text-align: center;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 6px #333;
 }
 
 #message {
