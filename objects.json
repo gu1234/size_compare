@@ -1,0 +1,62 @@
+[
+  {
+    "name": "Mercury",
+    "size": 4879,
+    "color": 11645373,
+    "texture": "mercury.jpg"
+  },
+  {
+    "name": "Venus",
+    "size": 12104,
+    "color": 15653858,
+    "texture": "venus.jpg"
+  },
+  {
+    "name": "Earth",
+    "size": 12742,
+    "color": 3045879,
+    "texture": "earth.jpg"
+  },
+  {
+    "name": "Mars",
+    "size": 6779,
+    "color": 12648462,
+    "texture": "mars.jpg"
+  },
+  {
+    "name": "Jupiter",
+    "size": 139820,
+    "color": 16049656,
+    "texture": "jupiter.jpg"
+  },
+  {
+    "name": "Saturn",
+    "size": 116460,
+    "color": 16247566,
+    "texture": "saturn.jpg"
+  },
+  {
+    "name": "Uranus",
+    "size": 50724,
+    "color": 8388564,
+    "texture": "uranus.jpg"
+  },
+  {
+    "name": "Neptune",
+    "size": 49244,
+    "color": 4286945,
+    "texture": "neptune.jpg"
+  },
+  {
+    "name": "The Moon",
+    "size": 3475,
+    "color": 13882323,
+    "texture": "moon.jpg"
+  },
+  {
+    "name": "The Sun",
+    "size": 1391000,
+    "color": 16766720,
+    "texture": "sun.jpg"
+  }
+]
