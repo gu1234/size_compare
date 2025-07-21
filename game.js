@@ -3,6 +3,12 @@ let objects = [];
 
 let currentPair = [];
 let canClick = true;
+let successCount = 0;
+const successCounterDiv = document.getElementById('success-counter');
+function updateSuccessCounter() {
+  successCounterDiv.textContent = `Successes: ${successCount}`;
+}
+updateSuccessCounter();
 
 const container = document.getElementById('game-container');
 const messageDiv = document.getElementById('message');
@@ -192,6 +198,8 @@ function onClick(event) {
     const picked = intersects[0].object.userData;
     const other = currentPair[1 - picked.index];
     if (picked.obj.size > other.size) {
+      successCount++;
+      updateSuccessCounter();
       successSound.currentTime = 0;
       successSound.play();
       if (typeof confetti === 'function') {
@@ -255,6 +263,8 @@ window.addEventListener('keydown', function(event) {
     const picked = { obj: currentPair[index], index };
     const other = currentPair[1 - index];
     if (picked.obj.size > other.size) {
+      successCount++;
+      updateSuccessCounter();
       successSound.currentTime = 0;
       successSound.play();
       if (typeof confetti === 'function') {
