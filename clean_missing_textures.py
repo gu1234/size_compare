@@ -5,8 +5,12 @@ import json
 with open('objects.json', 'r') as f:
     objects = json.load(f)
 
-# List all files in textures/
-texture_files = set(os.listdir('textures'))
+# List all files in textures/ (handle case where directory doesn't exist)
+if os.path.exists('textures') and os.path.isdir('textures'):
+    texture_files = set(os.listdir('textures'))
+else:
+    print("Warning: textures directory not found. All objects with textures will be removed.")
+    texture_files = set()
 
 # Filter objects whose texture file exists
 cleaned_objects = [obj for obj in objects if obj.get('texture') in texture_files]

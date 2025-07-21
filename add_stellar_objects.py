@@ -1,6 +1,8 @@
 import os
 import json
 import urllib.request
+import urllib.parse
+from pathlib import Path
 
 # List of new stellar objects to add
 new_objects = [
@@ -86,16 +88,47 @@ new_objects = [
 # Ensure textures directory exists
 os.makedirs('textures', exist_ok=True)
 
-# Download images
+# Download images with improved security and error handling
 for obj in new_objects:
-    img_path = os.path.join('textures', obj['texture'])
+    # Validate filename to prevent directory traversal attacks
+    texture_filename = Path(obj['texture']).name
+    if not texture_filename or '..' in texture_filename or '/' in texture_filename or '\\' in texture_filename:
+        print(f"Warning: Invalid texture filename for {obj['name']}: {obj['texture']}")
+        continue
+    
+    img_path = os.path.join('textures', texture_filename)
     if not os.path.exists(img_path):
         print(f"Downloading {obj['name']} texture...")
         try:
-            urllib.request.urlretrieve(obj['img_url'], img_path)
-        except Exception as e:
+            # Validate URL
+            parsed_url = urllib.parse.urlparse(obj['img_url'])
+            if not parsed_url.scheme or not parsed_url.netloc:
+                print(f"Warning: Invalid URL for {obj['name']}: {obj['img_url']}")
+                continue
+            
+            # Add timeout and user agent for better reliability
+            req = urllib.request.Request(
+                obj['img_url'],
+                headers={'User-Agent': 'Mozilla/5.0 (compatible; texture-downloader)'}
+            )
+            
+            with urllib.request.urlopen(req, timeout=30) as response:
+                # Check content length to avoid downloading extremely large files
+                content_length = response.headers.get('Content-Length')
+                if content_length and int(content_length) > 50 * 1024 * 1024:  # 50MB limit
+                    print(f"Warning: File too large for {obj['name']} (>{int(content_length)/(1024*1024):.1f}MB)")
+                    continue
+                
+                with open(img_path, 'wb') as f:
+                    f.write(response.read())
+                    
+        except urllib.error.URLError as e:
             print(f"Failed to download {obj['name']} from {obj['img_url']}: {e}")
             print(f"Please download manually from the above URL and save it as: {img_path}\n")
+            continue
+        except Exception as e:
+            print(f"Unexpected error downloading {obj['name']}: {e}")
+            print(f"Please download manually from {obj['img_url']} and save it as: {img_path}\n")
             continue
     else:
         print(f"Texture for {obj['name']} already exists.")
