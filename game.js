@@ -192,36 +192,43 @@ function onClick(event) {
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(meshes);
+  const intersects = raycaster.intersectObjects(meshes, true); // recursive
   if (intersects.length > 0) {
-    canClick = false;
-    const picked = intersects[0].object.userData;
-    const other = currentPair[1 - picked.index];
-    if (picked.obj.size > other.size) {
-      successCount++;
-      updateSuccessCounter();
-      successSound.currentTime = 0;
-      successSound.play();
-      if (typeof confetti === 'function') {
-        confetti({
-          particleCount: 80,
-          spread: 70,
-          origin: { y: 0.6 },
-        });
+    // Walk up the parent chain to find the mesh with userData.obj
+    let mesh = intersects[0].object;
+    while (mesh && (!mesh.userData || !mesh.userData.obj) && mesh.parent) {
+      mesh = mesh.parent;
+    }
+    if (mesh && mesh.userData && mesh.userData.obj) {
+      canClick = false;
+      const picked = mesh.userData;
+      const other = currentPair[1 - picked.index];
+      if (picked.obj.size > other.size) {
+        successCount++;
+        updateSuccessCounter();
+        successSound.currentTime = 0;
+        successSound.play();
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 80,
+            spread: 70,
+            origin: { y: 0.6 },
+          });
+        }
+        showMessage('Great job! 🎉', '#00ff99');
+        setTimeout(() => {
+          nextRound();
+        }, 1500);
+      } else {
+        tryAgainSound.currentTime = 0;
+        tryAgainSound.play();
+        showMessage('Try again! 😊', '#ffcc00');
+        setTimeout(() => {
+          canClick = true;
+          showPair(currentPair);
+          showMessage('Which is bigger? Tap to choose!');
+        }, 1200);
       }
-      showMessage('Great job! 🎉', '#00ff99');
-      setTimeout(() => {
-        nextRound();
-      }, 1500);
-    } else {
-      tryAgainSound.currentTime = 0;
-      tryAgainSound.play();
-      showMessage('Try again! 😊', '#ffcc00');
-      setTimeout(() => {
-        canClick = true;
-        showPair(currentPair);
-        showMessage('Which is bigger? Tap to choose!');
-      }, 1200);
     }
   }
 }
