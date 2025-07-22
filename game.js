@@ -1,3 +1,11 @@
+// Handle back button navigation
+const backButton = document.getElementById('back-button');
+if (backButton) {
+  backButton.addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+}
+
 // Astronomy objects will be loaded from objects.json
 let objects = [];
 

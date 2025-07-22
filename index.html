@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Which is Bigger? Astronomy Game</title>
+  <title>Astronomy Games Library</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
-  <h1>Which is Bigger?</h1>
-  <div id="success-counter"></div>
-  <div id="game-container"></div>
-  <div id="message"></div>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-  <script src="game.js"></script>
+<body class="library">
+  <h1>Astronomy Games</h1>
+  <div id="games-grid">
+    <div class="game-card" onclick="window.location.href='size-comparison.html'">
+      <div class="game-icon">🪐</div>
+      <h2>Size Comparison</h2>
+      <p>Compare the sizes of planets, stars, and cosmic objects</p>
+    </div>
+    <div class="game-card coming-soon">
+      <div class="game-icon">🚀</div>
+      <h2>Coming Soon</h2>
+      <p>More games are in development</p>
+    </div>
+  </div>
 </body>
 </html> 
