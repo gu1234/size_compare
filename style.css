@@ -257,60 +257,122 @@ body.identification-game {
 }
 
 /* Mobile responsiveness for library */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   body.library {
-    padding: 10px;
+    padding: 10px !important;
   }
   
-  body.library h1 {
-    font-size: 1.8rem;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  h1 {
+    font-size: 1.8rem !important;
+    margin-top: 20px !important;
+    margin-bottom: 20px !important;
+  }
+  
+  #game-container {
+    height: 50vh !important;
+  }
+  
+  #message {
+    font-size: 1.5rem !important;
+    margin-top: 15px !important;
   }
   
   #games-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 20px;
-    max-width: 100%;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+    margin-top: 20px !important;
+    max-width: 100% !important;
   }
   
   .game-card {
-    padding: 15px;
-    border-radius: 15px;
+    padding: 15px !important;
+    border-radius: 15px !important;
   }
   
   .game-card h2 {
-    font-size: 1.2rem;
-    margin: 8px 0 5px 0;
+    font-size: 1.2rem !important;
+    margin: 8px 0 5px 0 !important;
   }
   
   .game-card p {
-    font-size: 0.9rem;
-    margin: 0;
+    font-size: 0.9rem !important;
+    margin: 0 !important;
   }
   
   .game-icon {
-    font-size: 2.2rem;
-    margin-bottom: 10px;
+    font-size: 2.2rem !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+/* Even smaller screens (iPhone SE, etc.) */
+@media screen and (max-width: 480px) {
+  body.library {
+    padding: 5px !important;
+  }
+  
+  h1 {
+    font-size: 1.3rem !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+  }
+  
+  #game-container {
+    height: 45vh !important;
+  }
+  
+  #message {
+    font-size: 1.2rem !important;
+    margin-top: 10px !important;
+    min-height: 2em !important;
+  }
+  
+  .obj-label {
+    font-size: 1rem !important;
+    padding: 2px 6px !important;
+  }
+  
+  #games-grid {
+    gap: 8px !important;
+    margin-top: 10px !important;
+  }
+  
+  .game-card {
+    padding: 8px !important;
+    border-radius: 10px !important;
+  }
+  
+  .game-card h2 {
+    font-size: 0.9rem !important;
+    margin: 4px 0 2px 0 !important;
+  }
+  
+  .game-card p {
+    font-size: 0.75rem !important;
+    line-height: 1.2 !important;
+  }
+  
+  .game-icon {
+    font-size: 1.5rem !important;
+    margin-bottom: 4px !important;
   }
   
   /* Mobile styles for identification game */
   body.identification-game {
-    padding: 60px 20px 20px;
+    padding: 60px 20px 20px !important;
   }
   
   #object-display {
-    width: 250px;
-    height: 250px;
+    width: 250px !important;
+    height: 250px !important;
   }
   
   #options-container {
-    max-width: 300px;
+    max-width: 300px !important;
   }
   
   .option-button {
-    font-size: 1.1rem;
-    padding: 12px 15px;
+    font-size: 1.1rem !important;
+    padding: 12px 15px !important;
   }
 } 
