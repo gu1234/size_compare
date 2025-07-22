@@ -183,6 +183,79 @@ body.library {
   transform: translateX(-5px);
 }
 
+/* Object Identification Game Styles */
+body.identification-game {
+  justify-content: flex-start;
+  padding-top: 80px;
+}
+
+#identification-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#object-display {
+  width: 300px;
+  height: 300px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+#object-display canvas {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 20px;
+}
+
+#options-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.option-button {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  color: #fff;
+  font-size: 1.2rem;
+  font-family: inherit;
+  padding: 15px 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.option-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+}
+
+.option-button.correct {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: #4CAF50;
+  box-shadow: 0 0 20px rgba(76, 175, 80, 0.3);
+}
+
+.option-button.incorrect {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: #f44336;
+  box-shadow: 0 0 20px rgba(244, 67, 54, 0.3);
+}
+
 /* Mobile responsiveness for library */
 @media (max-width: 768px) {
   body.library h1 {
@@ -202,5 +275,24 @@ body.library {
   
   .game-icon {
     font-size: 3rem;
+  }
+  
+  /* Mobile styles for identification game */
+  body.identification-game {
+    padding: 60px 20px 20px;
+  }
+  
+  #object-display {
+    width: 250px;
+    height: 250px;
+  }
+  
+  #options-container {
+    max-width: 300px;
+  }
+  
+  .option-button {
+    font-size: 1.1rem;
+    padding: 12px 15px;
   }
 } 
