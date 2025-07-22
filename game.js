@@ -11,10 +11,14 @@ let objects = [];
 
 let currentPair = [];
 let canClick = true;
-let successCount = 0;
+// Load success count from localStorage or default to 0
+let successCount = parseInt(localStorage.getItem('sizeComparisonSuccessCount') || '0', 10);
 const successCounterDiv = document.getElementById('success-counter');
+
 function updateSuccessCounter() {
   successCounterDiv.textContent = `Successes: ${successCount}`;
+  // Save to localStorage whenever counter updates
+  localStorage.setItem('sizeComparisonSuccessCount', successCount.toString());
 }
 updateSuccessCounter();
 

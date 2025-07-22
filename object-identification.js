@@ -11,7 +11,8 @@ let objects = [];
 let currentObject = null;
 let currentOptions = [];
 let canClick = true;
-let successCount = 0;
+// Load success count from localStorage or default to 0
+let successCount = parseInt(localStorage.getItem('objectIdentificationSuccessCount') || '0', 10);
 
 // DOM elements
 const successCounterDiv = document.getElementById('success-counter');
@@ -21,6 +22,8 @@ const messageDiv = document.getElementById('message');
 
 function updateSuccessCounter() {
   successCounterDiv.textContent = `Successes: ${successCount}`;
+  // Save to localStorage whenever counter updates
+  localStorage.setItem('objectIdentificationSuccessCount', successCount.toString());
 }
 updateSuccessCounter();
 
