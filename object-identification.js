@@ -83,9 +83,47 @@ let animationId = null;
 function animate() {
   animationId = requestAnimationFrame(animate);
   if (currentMesh) {
-    currentMesh.rotation.y += 0.005;
+    // Billboard objects always face camera
+    if (currentMesh.userData.renderMode === 'billboard') {
+      currentMesh.lookAt(camera.position);
+    }
+    // Only rotate sphere objects (not flat or billboard)
+    else if (currentMesh.userData.renderMode === 'sphere') {
+      currentMesh.rotation.y += 0.005;
+    }
   }
   renderer.render(scene, camera);
+}
+
+// Create geometry based on renderMode
+function createGeometry(objData, displayRadius) {
+  const renderMode = objData.renderMode || 'sphere';
+
+  if (renderMode === 'sphere') {
+    return new THREE.SphereGeometry(displayRadius, 32, 32);
+  } else if (renderMode === 'flat') {
+    return new THREE.CircleGeometry(displayRadius, 64);
+  } else if (renderMode === 'billboard') {
+    return new THREE.PlaneGeometry(displayRadius * 2, displayRadius * 2);
+  }
+  // Default to sphere
+  return new THREE.SphereGeometry(displayRadius, 32, 32);
+}
+
+// Create material based on object properties
+function createMaterialForObject(objData, texture = null) {
+  const isEmissive = objData.emissive || objData.type === 'star';
+  const MaterialClass = isEmissive ? THREE.MeshBasicMaterial : THREE.MeshLambertMaterial;
+
+  if (texture) {
+    return new MaterialClass({
+      map: texture,
+      side: THREE.DoubleSide,
+      transparent: true
+    });
+  } else {
+    return new MaterialClass({ color: objData.color });
+  }
 }
 
 // Create 3D object
@@ -94,30 +132,37 @@ function createObject(objData) {
   if (animationId) {
     cancelAnimationFrame(animationId);
   }
-  
+
   // Clear previous objects
   while(scene.children.length > 2) {
     scene.remove(scene.children[2]);
   }
 
   const displayRadius = 1;
-  const geometry = new THREE.SphereGeometry(displayRadius, 32, 32);
+  const renderMode = objData.renderMode || 'sphere';
 
   function createMeshWithTexture(material) {
+    const geometry = createGeometry(objData, displayRadius);
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.userData = { renderMode: renderMode };
     currentMesh = mesh;
+
+    // Orient flat objects to face camera
+    if (renderMode === 'flat') {
+      mesh.rotation.x = -Math.PI / 2; // Lay flat
+    }
 
     // Special handling for Saturn
     console.log('Creating object:', objData.name);
     if (objData.name === 'Saturn') {
       console.log('Adding rings to Saturn!');
-      
+
       const innerRadius = displayRadius * 1.1;
       const outerRadius = displayRadius * 1.8;
       const segments = 64;
       const ringGeometry = new THREE.RingGeometry(innerRadius, outerRadius, segments);
       console.log('Ring geometry created:', ringGeometry);
-      
+
       // Remap UVs so the texture wraps around the ring
       const pos = ringGeometry.attributes.position;
       const uv = ringGeometry.attributes.uv;
@@ -131,9 +176,9 @@ function createObject(objData) {
         uv.setXY(i, u, v);
       }
       uv.needsUpdate = true;
-      
+
       const ringTexture = textureLoader.load('textures/saturn_ring.png');
-      const ringMaterial = new THREE.MeshBasicMaterial({ 
+      const ringMaterial = new THREE.MeshBasicMaterial({
         map: ringTexture,
         side: THREE.DoubleSide,
         transparent: true
@@ -141,23 +186,23 @@ function createObject(objData) {
       const rings = new THREE.Mesh(ringGeometry, ringMaterial);
       rings.position.set(0, 0, 0);
       rings.rotation.x = -Math.PI / 2 + 0.17;
-      
+
       console.log('Ring mesh created with texture:', rings);
       console.log('Adding ring to mesh:', mesh);
-      
+
       mesh.add(rings);
     }
 
     scene.add(mesh);
-    
+
     // Position camera
     camera.position.set(0, 1, 3);
     camera.lookAt(0, 0, 0);
-    
+
     // Debug scene contents
     console.log('Scene children count:', scene.children.length);
     console.log('Mesh children count:', mesh.children.length);
-    
+
     // Start animation
     animate();
   }
@@ -167,7 +212,7 @@ function createObject(objData) {
     `textures/${objData.texture}`,
     // onLoad
     (loadedTexture) => {
-      const material = new THREE.MeshLambertMaterial({ map: loadedTexture });
+      const material = createMaterialForObject(objData, loadedTexture);
       createMeshWithTexture(material);
     },
     // onProgress
@@ -175,7 +220,7 @@ function createObject(objData) {
     // onError
     (error) => {
       console.log('Texture failed to load, using fallback color');
-      const material = new THREE.MeshLambertMaterial({ color: objData.color });
+      const material = createMaterialForObject(objData);
       createMeshWithTexture(material);
     }
   );

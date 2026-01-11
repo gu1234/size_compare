@@ -3,60 +3,143 @@
     "name": "Mercury",
     "size": 4879,
     "color": 11645373,
-    "texture": "mercury.jpg"
+    "texture": "mercury.jpg",
+    "distanceFromEarth": 140000000
   },
   {
     "name": "Venus",
     "size": 12104,
     "color": 15653858,
-    "texture": "venus.jpg"
+    "texture": "venus.jpg",
+    "distanceFromEarth": 170000000
   },
   {
     "name": "Earth",
     "size": 12742,
     "color": 3045879,
-    "texture": "earth.jpg"
+    "texture": "earth.jpg",
+    "distanceFromEarth": 0
   },
   {
     "name": "Mars",
     "size": 6779,
     "color": 12648462,
-    "texture": "mars.jpg"
+    "texture": "mars.jpg",
+    "distanceFromEarth": 225000000
   },
   {
     "name": "Jupiter",
     "size": 139820,
     "color": 16049656,
-    "texture": "jupiter.jpg"
+    "texture": "jupiter.jpg",
+    "distanceFromEarth": 628000000
   },
   {
     "name": "Saturn",
     "size": 116460,
     "color": 16247566,
-    "texture": "saturn.jpg"
+    "texture": "saturn.jpg",
+    "distanceFromEarth": 1275000000
   },
   {
     "name": "Uranus",
     "size": 50724,
     "color": 8388564,
-    "texture": "uranus.jpg"
+    "texture": "uranus.jpg",
+    "distanceFromEarth": 2720000000
   },
   {
     "name": "Neptune",
     "size": 49244,
     "color": 4286945,
-    "texture": "neptune.jpg"
+    "texture": "neptune.jpg",
+    "distanceFromEarth": 4350000000
   },
   {
     "name": "The Moon",
     "size": 3475,
     "color": 13882323,
-    "texture": "moon.jpg"
+    "texture": "moon.jpg",
+    "distanceFromEarth": 384400
   },
   {
     "name": "The Sun",
     "size": 1391000,
     "color": 16766720,
-    "texture": "sun.jpg"
+    "texture": "sun.jpg",
+    "type": "star",
+    "renderMode": "sphere",
+    "emissive": true,
+    "distanceFromEarth": 150000000
+  },
+  {
+    "name": "Crab Nebula",
+    "size": 104071000000000,
+    "color": 16744576,
+    "texture": "crab_nebula.jpg",
+    "type": "nebula",
+    "renderMode": "billboard",
+    "emissive": true,
+    "distanceFromEarth": 61496500000000
+  },
+  {
+    "name": "Io",
+    "size": 3643,
+    "color": 16770509,
+    "texture": "io.jpg",
+    "type": "moon",
+    "parent": "Jupiter",
+    "renderMode": "sphere",
+    "distanceFromEarth": 628000000
+  },
+  {
+    "name": "Europa",
+    "size": 3122,
+    "color": 15658734,
+    "texture": "europa.jpg",
+    "type": "moon",
+    "parent": "Jupiter",
+    "renderMode": "sphere",
+    "distanceFromEarth": 628000000
+  },
+  {
+    "name": "Ganymede",
+    "size": 5268,
+    "color": 12961221,
+    "texture": "ganymede.jpg",
+    "type": "moon",
+    "parent": "Jupiter",
+    "renderMode": "sphere",
+    "distanceFromEarth": 628000000
+  },
+  {
+    "name": "Callisto",
+    "size": 4821,
+    "color": 10329501,
+    "texture": "callisto.jpg",
+    "type": "moon",
+    "parent": "Jupiter",
+    "renderMode": "sphere",
+    "distanceFromEarth": 628000000
+  },
+  {
+    "name": "Titan",
+    "size": 5150,
+    "color": 16748931,
+    "texture": "titan.jpg",
+    "type": "moon",
+    "parent": "Saturn",
+    "renderMode": "sphere",
+    "distanceFromEarth": 1275000000
+  },
+  {
+    "name": "Enceladus",
+    "size": 504,
+    "color": 15987699,
+    "texture": "enceladus.jpg",
+    "type": "moon",
+    "parent": "Saturn",
+    "renderMode": "sphere",
+    "distanceFromEarth": 1275000000
   }
 ]

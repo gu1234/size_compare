@@ -83,6 +83,46 @@ function clearScene() {
   meshes = [];
 }
 
+// Create geometry based on renderMode
+function createGeometry(obj, displayRadius) {
+  const renderMode = obj.renderMode || 'sphere';
+
+  if (renderMode === 'sphere') {
+    return new THREE.SphereGeometry(displayRadius, 32, 32);
+  } else if (renderMode === 'flat') {
+    return new THREE.CircleGeometry(displayRadius, 64);
+  } else if (renderMode === 'billboard') {
+    return new THREE.PlaneGeometry(displayRadius * 2, displayRadius * 2);
+  }
+  // Default to sphere
+  return new THREE.SphereGeometry(displayRadius, 32, 32);
+}
+
+// Create material based on object properties
+function createMaterial(obj) {
+  const isEmissive = obj.emissive || obj.type === 'star';
+  const MaterialClass = isEmissive ? THREE.MeshBasicMaterial : THREE.MeshPhongMaterial;
+
+  if (obj.texture) {
+    const texture = textureLoader.load(
+      'textures/' + obj.texture,
+      undefined,
+      undefined,
+      function (err) {
+        console.warn('Texture failed to load:', obj.texture);
+      }
+    );
+    return new MaterialClass({
+      map: texture,
+      side: THREE.DoubleSide,
+      transparent: true,
+      color: 0xffffff
+    });
+  } else {
+    return new MaterialClass({ color: obj.color });
+  }
+}
+
 function showPair(pair) {
   clearScene();
   // Both objects have the same display size (smaller)
@@ -97,35 +137,27 @@ function showPair(pair) {
   // Left and right positions (centered)
   const positions = [-distance / 2, distance / 2];
   pair.forEach((obj, i) => {
-    const geometry = new THREE.SphereGeometry(displayRadius, 32, 32);
-    // Load texture if available
-    let material;
-    if (obj.texture) {
-      const texture = textureLoader.load(
-        'textures/' + obj.texture,
-        undefined,
-        undefined,
-        function (err) {
-          console.warn('Texture failed to load:', obj.texture);
-        }
-      );
-      material = new THREE.MeshPhongMaterial({ map: texture, color: 0xffffff }); // no tint
-    } else {
-      material = new THREE.MeshPhongMaterial({ color: obj.color });
-    }
+    const geometry = createGeometry(obj, displayRadius);
+    const material = createMaterial(obj);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.position.x = positions[i];
-    mesh.userData = { obj, index: i };
+    mesh.userData = { obj, index: i, renderMode: obj.renderMode || 'sphere' };
+
+    // Orient flat objects to face camera
+    if (obj.renderMode === 'flat') {
+      mesh.rotation.x = -Math.PI / 2; // Lay flat
+    }
+
     scene.add(mesh);
     meshes.push(mesh);
 
     // Add rings for Saturn
     if (obj.name === 'Saturn') {
-      const ringTexture = textureLoader.load('textures/saturn_ring.png');
       const innerRadius = displayRadius * 1.1;
       const outerRadius = displayRadius * 1.8;
       const segments = 64;
       const ringGeometry = new THREE.RingGeometry(innerRadius, outerRadius, segments);
+
       // Remap UVs so the texture wraps around the ring
       const pos = ringGeometry.attributes.position;
       const uv = ringGeometry.attributes.uv;
@@ -139,17 +171,18 @@ function showPair(pair) {
         uv.setXY(i, u, v);
       }
       uv.needsUpdate = true;
+
+      const ringTexture = textureLoader.load('textures/saturn_ring.png');
       const ringMaterial = new THREE.MeshBasicMaterial({
         map: ringTexture,
         side: THREE.DoubleSide,
         transparent: true
       });
-      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-      ring.position.set(0, 0, 0); // Centered on planet
-      ring.rotation.x = -Math.PI / 2 + 0.17; // Horizontal with slight tilt
-      // Do not set ring.rotation.z
-      mesh.add(ring); // Attach ring to planet mesh
-      mesh.userData.ring = ring; // Store reference for animation if needed
+      const rings = new THREE.Mesh(ringGeometry, ringMaterial);
+      rings.position.set(0, 0, 0);
+      rings.rotation.x = -Math.PI / 2 + 0.17;
+
+      mesh.add(rings);
     }
   });
   // Add labels
@@ -317,8 +350,12 @@ camera.position.z = 16;
 function animate() {
   requestAnimationFrame(animate);
   meshes.forEach(mesh => {
-    // Only rotate the planet mesh (not the ring separately)
-    if (mesh.type === 'Mesh' && mesh.geometry.type === 'SphereGeometry') {
+    // Billboard objects always face camera
+    if (mesh.userData.renderMode === 'billboard') {
+      mesh.lookAt(camera.position);
+    }
+    // Only rotate sphere objects (not rings, flat, or billboard)
+    else if (mesh.type === 'Mesh' && mesh.geometry.type === 'SphereGeometry') {
       mesh.rotation.y += 0.01;
     }
   });
