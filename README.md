@@ -6,6 +6,7 @@ A playful astronomy web app where you compare the sizes of planets, moons, and o
 - Compare real astronomical objects (planets, moons, nebulae, galaxies, and more)
 - Interactive 3D models with textures
 - Playful, modern UI and sound effects
+- Multiple mini-games (size, distance, identification, temperature)
 - Responsive design for desktop and mobile
 
 ## Demo
